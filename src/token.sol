@@ -15,13 +15,64 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity >=0.4.23 <0.7.0;
+pragma solidity ^0.8.21;
 
-import "ds-math/math.sol";
-import "ds-auth/auth.sol";
+interface DSAuthority {
+    function canCall(
+        address src, address dst, bytes4 sig
+    ) external view returns (bool);
+}
+
+contract DSAuthEvents {
+    event LogSetAuthority (address indexed authority);
+    event LogSetOwner     (address indexed owner);
+}
+
+contract DSAuth is DSAuthEvents {
+    DSAuthority  public  authority;
+    address      public  owner;
+
+    constructor() public {
+        owner = msg.sender;
+        emit LogSetOwner(msg.sender);
+    }
+
+    function setOwner(address owner_)
+        public
+        auth
+    {
+        owner = owner_;
+        emit LogSetOwner(owner);
+    }
+
+    function setAuthority(DSAuthority authority_)
+        public
+        auth
+    {
+        authority = authority_;
+        emit LogSetAuthority(address(authority));
+    }
+
+    modifier auth {
+        require(isAuthorized(msg.sender, msg.sig), "ds-auth-unauthorized");
+        _;
+    }
+
+    function isAuthorized(address src, bytes4 sig) internal view returns (bool) {
+        if (src == address(this)) {
+            return true;
+        } else if (src == owner) {
+            return true;
+        } else if (authority == DSAuthority(address(0))) {
+            return false;
+        } else {
+            return authority.canCall(src, address(this), sig);
+        }
+    }
+}
 
 
-contract DSToken is DSMath, DSAuth {
+contract DSToken is DSAuth {
     bool                                              public  stopped;
     uint256                                           public  totalSupply;
     mapping (address => uint256)                      public  balanceOf;
