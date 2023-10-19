@@ -121,7 +121,7 @@ contract DSToken is DSAuth {
     {
         if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
             require(allowance[src][msg.sender] >= wad, "ds-token-insufficient-approval");
-            allowance[src][msg.sender] = sub(allowance[src][msg.sender], wad);
+            allowance[src][msg.sender] = allowance[src][msg.sender] - wad;
         }
 
         require(balanceOf[src] >= wad, "ds-token-insufficient-balance");
@@ -163,7 +163,7 @@ contract DSToken is DSAuth {
     function burn(address guy, uint wad) public auth stoppable {
         if (guy != msg.sender && allowance[guy][msg.sender] != uint(-1)) {
             require(allowance[guy][msg.sender] >= wad, "ds-token-insufficient-approval");
-            allowance[guy][msg.sender] = sub(allowance[guy][msg.sender], wad);
+            allowance[guy][msg.sender] = allowance[guy][msg.sender] - wad;
         }
 
         require(balanceOf[guy] >= wad, "ds-token-insufficient-balance");
