@@ -125,8 +125,8 @@ contract DSToken is DSAuth {
         }
 
         require(balanceOf[src] >= wad, "ds-token-insufficient-balance");
-        balanceOf[src] = sub(balanceOf[src], wad);
-        balanceOf[dst] = add(balanceOf[dst], wad);
+        balanceOf[src] = balanceOf[src] - wad;
+        balanceOf[dst] = balanceOf[dst] + wad;
 
         emit Transfer(src, dst, wad);
 
@@ -155,8 +155,8 @@ contract DSToken is DSAuth {
     }
 
     function mint(address guy, uint wad) public auth stoppable {
-        balanceOf[guy] = add(balanceOf[guy], wad);
-        totalSupply = add(totalSupply, wad);
+        balanceOf[guy] = balanceOf[guy] + wad;
+        totalSupply = totalSupply + wad;
         emit Mint(guy, wad);
     }
 
@@ -167,8 +167,8 @@ contract DSToken is DSAuth {
         }
 
         require(balanceOf[guy] >= wad, "ds-token-insufficient-balance");
-        balanceOf[guy] = sub(balanceOf[guy], wad);
-        totalSupply = sub(totalSupply, wad);
+        balanceOf[guy] = balanceOf[guy] - wad;
+        totalSupply = totalSupply - wad;
         emit Burn(guy, wad);
     }
 
