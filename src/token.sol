@@ -32,7 +32,7 @@ contract DSAuth is DSAuthEvents {
     DSAuthority  public  authority;
     address      public  owner;
 
-    constructor() public {
+    constructor() {
         owner = msg.sender;
         emit LogSetOwner(msg.sender);
     }
@@ -82,7 +82,7 @@ contract DSToken is DSAuth {
     string                                            public  name = "";     // Optional token name
 
 
-    constructor(string memory symbol_) public {
+    constructor(string memory symbol_) {
         symbol = symbol_;
     }
 
@@ -99,7 +99,7 @@ contract DSToken is DSAuth {
     }
 
     function approve(address guy) external returns (bool) {
-        return approve(guy, uint(-1));
+        return approve(guy, type(uint256).max);
     }
 
     function approve(address guy, uint wad) public stoppable returns (bool) {
@@ -119,7 +119,7 @@ contract DSToken is DSAuth {
         stoppable
         returns (bool)
     {
-        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
+        if (src != msg.sender && allowance[src][msg.sender] != type(uint256).max) {
             require(allowance[src][msg.sender] >= wad, "ds-token-insufficient-approval");
             allowance[src][msg.sender] = allowance[src][msg.sender] - wad;
         }
@@ -161,7 +161,7 @@ contract DSToken is DSAuth {
     }
 
     function burn(address guy, uint wad) public auth stoppable {
-        if (guy != msg.sender && allowance[guy][msg.sender] != uint(-1)) {
+        if (guy != msg.sender && allowance[guy][msg.sender] != type(uint256).max) {
             require(allowance[guy][msg.sender] >= wad, "ds-token-insufficient-approval");
             allowance[guy][msg.sender] = allowance[guy][msg.sender] - wad;
         }

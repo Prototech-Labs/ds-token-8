@@ -24,7 +24,7 @@ import "./token.sol";
 contract TokenUser {
     DSToken  token;
 
-    constructor(DSToken token_) public {
+    constructor(DSToken token_) {
         token = token_;
     }
 
@@ -315,7 +315,7 @@ contract DSTokenTest is DSTest {
     function testTrusting() public {
         assertEq(token.allowance(self, user2), 0);
         token.approve(user2);
-        assertEq(token.allowance(self, user2), uint(-1));
+        assertEq(token.allowance(self, user2), type(uint256).max);
         token.approve(user2, 0);
         assertEq(token.allowance(self, user2), 0);
     }
@@ -363,10 +363,10 @@ contract DSTokenTest is DSTest {
         assertEq(token.allowance(self, user1), 0);
         assertEq(token.balanceOf(user1), 0);
         token.approve(user1);
-        assertEq(token.allowance(self, user1), uint(-1));
+        assertEq(token.allowance(self, user1), type(uint256).max);
         TokenUser(user1).doPull(self, 1000);
         assertEq(token.balanceOf(user1), 1000);
-        assertEq(token.allowance(self, user1), uint(-1));
+        assertEq(token.allowance(self, user1), type(uint256).max);
     }
 
     function testFailTransferOnlyTrustedCaller() public {
