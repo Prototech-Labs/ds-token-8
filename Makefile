@@ -1,4 +1,4 @@
 all   :; forge build
 build :; forge clean && forge build
-test  :; forge test
+tests :; forge test
 clean :; forge clean

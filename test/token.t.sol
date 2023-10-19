@@ -19,7 +19,7 @@ pragma solidity ^0.8.21;
 
 import "forge-std/Test.sol";
 
-import "./token.sol";
+import "src/token.sol";
 
 contract TokenUser {
     DSToken  token;
