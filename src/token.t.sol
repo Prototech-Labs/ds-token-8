@@ -17,7 +17,7 @@
 
 pragma solidity ^0.8.21;
 
-import "ds-test/test.sol";
+import "forge-std/Test.sol";
 
 import "./token.sol";
 
