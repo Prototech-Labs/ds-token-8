@@ -1,4 +1,5 @@
 all   :; forge build
 build :; forge clean && forge build
-tests :; forge test
+.PHONY: test
+test :; forge test
 clean :; forge clean
